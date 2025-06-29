@@ -9,13 +9,17 @@
 </head>
 <body>
 
-  <h1>Dynamic Quote Generator</h1>
+   <h1>Dynamic Quote Generator</h1>
   
-  <div class="controls">
-    <select id="categoryFilter">
-      <option value="all">All Categories</option>
-    </select>
+  <div id="filterControls" class="controls">
+    <div>
+      <label for="categoryFilter">Filter by Category:</label>
+      <select id="categoryFilter">
+        <option value="all">All Categories</option>
+      </select>
+    </div>
     <button id="newQuote">Show Random Quote</button>
+    <button id="resetFilter">Reset Filter</button>
   </div>
   
   <div id="quoteDisplay">
@@ -45,5 +49,6 @@
       <button onclick="clearLocalStorage()">Clear All Quotes</button>
     </div>
   </div>
+  
 </body>
 </html>
