@@ -9,7 +9,19 @@
 </head>
 <body>
 
-   <h1>Dynamic Quote Generator</h1>
+   <h1>Dynamic Quote Generator with Sync</h1>
+  
+  <div id="notification"></div>
+  
+  <div id="conflictResolutionModal">
+    <div class="modal-content">
+      <h2>Resolve Conflicts</h2>
+      <div id="conflictsList"></div>
+      <button onclick="resolveConflicts('server')">Use Server Version</button>
+      <button onclick="resolveConflicts('local')">Keep Local Changes</button>
+      <button onclick="resolveConflicts('merge')">Merge Changes</button>
+    </div>
+  </div>
   
   <div id="filterControls" class="controls">
     <div>
@@ -20,6 +32,12 @@
     </div>
     <button id="newQuote">Show Random Quote</button>
     <button id="resetFilter">Reset Filter</button>
+    <button id="manualSync">Sync Now</button>
+  </div>
+  
+  <div class="sync-status">
+    Last sync: <span id="lastSyncTime">Never</span>
+    <span id="syncStatus"></span>
   </div>
   
   <div id="quoteDisplay">
@@ -34,12 +52,6 @@
   </div>
   
   <div class="form-group">
-    <h3>Add New Category</h3>
-    <input id="newCategory" type="text" placeholder="Enter new category name" />
-    <button onclick="addCategory()">Add Category</button>
-  </div>
-
-  <div class="form-group">
     <h3>Data Management</h3>
     <div class="storage-actions">
       <button onclick="exportToJson()">Export Quotes to JSON</button>
@@ -49,6 +61,7 @@
       <button onclick="clearLocalStorage()">Clear All Quotes</button>
     </div>
   </div>
+
   
 </body>
 </html>
