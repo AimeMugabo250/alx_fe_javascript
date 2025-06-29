@@ -35,5 +35,15 @@
     <button onclick="addCategory()">Add Category</button>
   </div>
 
+  <div class="form-group">
+    <h3>Data Management</h3>
+    <div class="storage-actions">
+      <button onclick="exportToJson()">Export Quotes to JSON</button>
+      <a id="exportLink" download="quotes.json">Download</a>
+      <button onclick="document.getElementById('importFile').click()">Import Quotes from JSON</button>
+      <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importFromJsonFile(event)" />
+      <button onclick="clearLocalStorage()">Clear All Quotes</button>
+    </div>
+  </div>
 </body>
 </html>
