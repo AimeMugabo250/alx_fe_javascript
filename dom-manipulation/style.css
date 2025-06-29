@@ -1,4 +1,4 @@
-body {
+ body {
       font-family: Arial, sans-serif;
       max-width: 800px;
       margin: 0 auto;
@@ -38,6 +38,7 @@ body {
     select {
       padding: 8px;
       margin-right: 10px;
+      min-width: 200px;
     }
     input {
       padding: 8px;
@@ -52,6 +53,10 @@ body {
     }
     .controls {
       margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
     }
     .storage-actions {
       display: flex;
@@ -60,4 +65,15 @@ body {
     }
     #exportLink {
       display: none;
+    }
+    .category-tag {
+      display: inline-block;
+      background-color: #e0e0e0;
+      padding: 3px 8px;
+      border-radius: 10px;
+      font-size: 0.8em;
+      margin-right: 5px;
+    }
+    #filterControls {
+      margin-bottom: 20px;
     }
