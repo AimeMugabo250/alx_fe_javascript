@@ -10,17 +10,30 @@
 <body>
 
   <h1>Dynamic Quote Generator</h1>
-
-  <label for="categorySelect">Choose a category:</label>
-  <select id="categorySelect"></select>
-
-  <div id="quoteDisplay">Click "Show New Quote" to begin.</div>
-  <button id="newQuote">Show New Quote</button>
-
-  <h2>Add a New Quote</h2>
-  <input id="newQuoteText" type="text" placeholder="Enter a new quote" />
-  <input id="newQuoteCategory" type="text" placeholder="Enter quote category" />
-  <button onclick="addQuote()">Add Quote</button>
+  
+  <div class="controls">
+    <select id="categoryFilter">
+      <option value="all">All Categories</option>
+    </select>
+    <button id="newQuote">Show Random Quote</button>
+  </div>
+  
+  <div id="quoteDisplay">
+    <p class="quote-text">Click the button to display a random quote!</p>
+  </div>
+  
+  <div class="form-group">
+    <h3>Add New Quote</h3>
+    <input id="newQuoteText" type="text" placeholder="Enter a new quote" />
+    <input id="newQuoteCategory" type="text" placeholder="Enter quote category" />
+    <button onclick="addQuote()">Add Quote</button>
+  </div>
+  
+  <div class="form-group">
+    <h3>Add New Category</h3>
+    <input id="newCategory" type="text" placeholder="Enter new category name" />
+    <button onclick="addCategory()">Add Category</button>
+  </div>
 
 </body>
 </html>
