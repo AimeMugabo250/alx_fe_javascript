@@ -1,4 +1,4 @@
-  body {
+body {
       font-family: Arial, sans-serif;
       max-width: 800px;
       margin: 0 auto;
@@ -30,6 +30,7 @@
       border-radius: 4px;
       cursor: pointer;
       margin-right: 10px;
+      margin-bottom: 10px;
     }
     button:hover {
       background-color: #45a049;
@@ -51,4 +52,12 @@
     }
     .controls {
       margin-bottom: 20px;
+    }
+    .storage-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    #exportLink {
+      display: none;
     }
