@@ -1,4 +1,4 @@
-    body {
+body {
       font-family: Arial, sans-serif;
       max-width: 800px;
       margin: 0 auto;
@@ -35,12 +35,7 @@
     button:hover {
       background-color: #45a049;
     }
-    select {
-      padding: 8px;
-      margin-right: 10px;
-      min-width: 200px;
-    }
-    input {
+    select, input {
       padding: 8px;
       margin-right: 10px;
       width: 300px;
