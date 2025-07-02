@@ -4,11 +4,122 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Dynamic Quote Generator</title>
-  <script src="script.js" defer></script>
-  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    #quoteDisplay {
+      min-height: 150px;
+      padding: 20px;
+      margin: 20px 0;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      background-color: #f9f9f9;
+    }
+    .quote-text {
+      font-size: 1.5em;
+      font-style: italic;
+    }
+    .quote-category {
+      margin-top: 10px;
+      font-weight: bold;
+      color: #555;
+    }
+    button {
+      padding: 8px 16px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-right: 10px;
+      margin-bottom: 10px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    select, input {
+      padding: 8px;
+      margin-right: 10px;
+      width: 300px;
+    }
+    .form-group {
+      margin: 20px 0;
+      padding: 20px;
+      border: 1px solid #eee;
+      border-radius: 5px;
+    }
+    .controls {
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .storage-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    #exportLink {
+      display: none;
+    }
+    .category-tag {
+      display: inline-block;
+      background-color: #e0e0e0;
+      padding: 3px 8px;
+      border-radius: 10px;
+      font-size: 0.8em;
+      margin-right: 5px;
+    }
+    #notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px;
+      background: #f8f9fa;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      display: none;
+      z-index: 1000;
+    }
+    .sync-status {
+      margin-top: 10px;
+      font-size: 0.9em;
+      color: #666;
+    }
+    #conflictResolutionModal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 2000;
+      justify-content: center;
+      align-items: center;
+    }
+    .modal-content {
+      background: white;
+      padding: 20px;
+      border-radius: 5px;
+      width: 80%;
+      max-width: 600px;
+    }
+    .conflict-item {
+      margin: 10px 0;
+      padding: 10px;
+      border: 1px solid #eee;
+    }
+  </style>
 </head>
 <body>
-
   <h1>Dynamic Quote Generator with Sync</h1>
   <div id="notification"></div>
   <div id="conflictResolutionModal">
@@ -54,6 +165,112 @@
       <button onclick="clearLocalStorage()">Clear All Quotes</button>
     </div>
   </div>
-  
+  <script>
+    let quotes = JSON.parse(localStorage.getItem('quotes')) || [];
+
+    function saveQuotes() {
+      localStorage.setItem('quotes', JSON.stringify(quotes));
+      updateCategoryFilter();
+    }
+
+    function displayQuote(quote) {
+      const display = document.getElementById('quoteDisplay');
+      display.innerHTML = `<p class="quote-text">${quote.text}</p><p class="quote-category">Category: ${quote.category}</p>`;
+    }
+
+    function showRandomQuote() {
+      const category = document.getElementById('categoryFilter').value;
+      const filtered = category === 'all' ? quotes : quotes.filter(q => q.category === category);
+      if (filtered.length === 0) {
+        alert('No quotes available for this category.');
+        return;
+      }
+      const random = filtered[Math.floor(Math.random() * filtered.length)];
+      displayQuote(random);
+    }
+
+    function addQuote() {
+      const textInput = document.getElementById('newQuoteText');
+      const categoryInput = document.getElementById('newQuoteCategory');
+      const text = textInput.value.trim();
+      const category = categoryInput.value.trim();
+      if (text && category) {
+        quotes.push({ text, category });
+        saveQuotes();
+        displayQuote({ text, category });
+        textInput.value = '';
+        categoryInput.value = '';
+        alert('Quote added!');
+      } else {
+        alert('Please enter both quote text and category.');
+      }
+    }
+
+    function updateCategoryFilter() {
+      const select = document.getElementById('categoryFilter');
+      const current = select.value;
+      const categories = Array.from(new Set(quotes.map(q => q.category)));
+      select.innerHTML = '<option value="all">All Categories</option>' + categories.map(cat => `<option value="${cat}">${cat}</option>`).join('');
+      select.value = current;
+    }
+
+    function exportToJson() {
+      const blob = new Blob([JSON.stringify(quotes, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.getElementById('exportLink');
+      link.href = url;
+      link.style.display = 'inline';
+      link.click();
+    }
+
+    function importFromJsonFile(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const importedQuotes = JSON.parse(e.target.result);
+          if (Array.isArray(importedQuotes)) {
+            quotes = importedQuotes;
+            saveQuotes();
+            alert('Quotes imported successfully!');
+          } else {
+            alert('Invalid format in imported file.');
+          }
+        } catch {
+          alert('Failed to parse JSON.');
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function clearLocalStorage() {
+      if (confirm('Are you sure you want to clear all quotes?')) {
+        localStorage.removeItem('quotes');
+        quotes = [];
+        updateCategoryFilter();
+        document.getElementById('quoteDisplay').innerHTML = '<p class="quote-text">No quotes available.</p>';
+        alert('All quotes cleared.');
+      }
+    }
+
+    function resolveConflicts(option) {
+      alert('Conflict resolution not implemented yet.');
+    }
+
+    function manualSync() {
+      const time = new Date().toLocaleString();
+      document.getElementById('lastSyncTime').textContent = time;
+      document.getElementById('syncStatus').textContent = 'Synced';
+    }
+
+    document.getElementById('newQuote').addEventListener('click', showRandomQuote);
+    document.getElementById('resetFilter').addEventListener('click', () => {
+      document.getElementById('categoryFilter').value = 'all';
+    });
+    document.getElementById('manualSync').addEventListener('click', manualSync);
+
+    updateCategoryFilter();
+  </script>
 </body>
 </html>
